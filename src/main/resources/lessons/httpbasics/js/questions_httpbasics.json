@@ -55,7 +55,7 @@
     {
       "text": "Why is HTTPS preferred over HTTP",
       "solutions": {
-        "1": "Attackers cannot intercept traffic sent with HTTPS",
+        "1": "Attackers cannot intercept and modify traffic sent with HTTPS",
         "2": "Search engines rank HTTPS websites higher",
         "3": "Attackers cannot tamper with traffic sent with HTTPS",
         "4": "All of the above"
