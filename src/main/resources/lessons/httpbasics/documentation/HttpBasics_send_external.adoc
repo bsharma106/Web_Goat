@@ -1,7 +1,7 @@
 = Sending HTTP request via external tools
 
 In previous examples, you utilized HTML forms and browser JavaScript to send HTTP requests. Sometimes, attackers need to
-send HTTP requests with external tools rather than relying on functionality built into the website. 
+send HTTP requests with external tools rather than relying on functionality built into the website.
 
 == Examples of external tools
 * The https://curl.se/docs/manpage.html[curl] command

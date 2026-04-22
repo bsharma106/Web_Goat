@@ -1,4 +1,4 @@
-= HTTP Expanded 
+= HTTP Expanded
 
 == HTTPS and TLS
 
@@ -8,7 +8,7 @@ Secure)_ adds *confidentiality* and *integrity* to the insecure HTTP protocol th
 
 
 `Transport Layer Security` _(TLS)_ is a protocol used to facilitate an encrypted connection between a client and server,
-while also verifying that data sent in the connection has not been tampered with. HTTPS uses TLS to secure the HTTP protocol. 
+while also verifying that data sent in the connection has not been tampered with. HTTPS uses TLS to secure the HTTP protocol.
 
 As secure data transmission grew more important, HTTPS adoption became widespread. Today, browsers flag all plain HTTP traffic as insecure, and search engines prioritize HTTPS results. This marks a significant shift from earlier practices and paves the way for a deeper look at how HTTPS achieves security.
 
@@ -18,7 +18,7 @@ As secure data transmission grew more important, HTTPS adoption became widesprea
 
 TLS protects confidentiality by establishing an encrypted connection between the client and server. It uses https://en.wikipedia.org/wiki/Public-key_cryptography[public key cryptography] along with key exchange algorithms like
 Diffie–Hellman to securely agree on shared keys, which are then used to encrypt all data sent across the connection.
-This prevents anyone who intercepts the traffic from reading it, helping to ensure that sensitive information stays private. 
+This prevents anyone who intercepts the traffic from reading it, helping to ensure that sensitive information stays private.
 
 Check out this https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/[article by Cloudflare] to learn
 more about the TLS handshake, and what happens behind the scenes to establish an encrypted connection.
