@@ -86,4 +86,3 @@ modify it as follows.
 Then let the request continue through (by hitting the play button).
 
 NOTE: The two play buttons behave a little differently, but we'll let you tinker and figure that out for yourself.
-
