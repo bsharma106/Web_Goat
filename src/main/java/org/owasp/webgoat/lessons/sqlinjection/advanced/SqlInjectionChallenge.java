@@ -8,8 +8,12 @@ import static org.owasp.webgoat.container.assignments.AttackResultBuilder.failed
 import static org.owasp.webgoat.container.assignments.AttackResultBuilder.informationMessage;
 import static org.owasp.webgoat.container.assignments.AttackResultBuilder.success;
 
-import java.sql.*;
-import lombok.extern.slf4j.Slf4j;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.owasp.webgoat.container.LessonDataSource;
 import org.owasp.webgoat.container.assignments.AssignmentEndpoint;
 import org.owasp.webgoat.container.assignments.AssignmentHints;
@@ -31,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
       "SqlInjectionChallenge6",
       "SqlInjectionChallenge7"
     })
-@Slf4j
+
 public class SqlInjectionChallenge implements AssignmentEndpoint {
 
   private final LessonDataSource dataSource;
@@ -49,7 +53,7 @@ public class SqlInjectionChallenge implements AssignmentEndpoint {
       @RequestParam("password_reg") String password) {
     AttackResult attackResult = checkArguments(username, email, password);
 
-    if (attackResult == null) {
+    if (attackResult.assignmentSolved()) {
 
       try (Connection connection = dataSource.getConnection()) {
         String checkUserQuery =
