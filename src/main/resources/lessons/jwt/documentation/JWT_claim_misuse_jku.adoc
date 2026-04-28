@@ -1,6 +1,6 @@
 == Claim misuse
 
-Header claims misuse can occur when the header information is tampered with or manipulated inappropriately
+Header claims misuse can occur when the header information is tampered with or manipulated inappropriately.
 
 === JSON Web Key URL (JKU)
 
@@ -38,6 +38,10 @@ However, filtering on URLs is quite challenging to implement, and this can be by
 - **Server verification**: The server, upon receiving the JWT, validates the signature using the public key obtained from the JWKS endpoint.
 
 - **Successful attack**: If the server uses the weak or manipulated key to verify the JWT, the attacker gains unauthorized access or executes their intended exploit.
+
+==== Generating JWKs files
+
+Not many tools exist for generating JWKs files, I found that Bespoke Engineering's open source JWK generator works the best. It comes in an https://mkjwk.org/[online version] and a https://github.com/bspk/json-web-key-generator[CLI]. *For security purposes it is recommended to use the CLI as processing occurs on your computer instead of an untrusted external server which could potentially store keys.*
 
 
 === Mitigation
