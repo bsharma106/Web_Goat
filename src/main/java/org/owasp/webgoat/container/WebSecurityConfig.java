@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -58,9 +59,28 @@ public class WebSecurityConfig {
               oidc.loginPage("/login");
             })
         .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
-        .csrf(csrf -> csrf.disable())
-        .headers(headers -> headers.disable())
-        .exceptionHandling(
+//        .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/actuator/**"))
+//        .headers(headers -> headers.disable())
+            .headers(
+                    headers ->
+                            headers
+                                    .contentTypeOptions(contentTypeOptions -> {})
+                                    .contentSecurityPolicy(
+                                            csp ->
+                                                    csp.policyDirectives(
+                                                            "default-src 'self'; "
+                                                                    + "script-src 'self'; "
+                                                                    + "style-src 'self'; "
+                                                                    + "img-src 'self' data:; "
+                                                                    + "font-src 'self'; "
+                                                                    + "connect-src 'self'; "
+                                                                    + "frame-ancestors 'self'; "
+                                                                    + "object-src 'none'; "
+                                                                    + "base-uri 'self'; "
+                                                                    + "form-action 'self'"))
+                                    .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+            .exceptionHandling(
             handling ->
                 handling.authenticationEntryPoint(new AjaxAuthenticationEntryPoint("/login")))
         .build();
