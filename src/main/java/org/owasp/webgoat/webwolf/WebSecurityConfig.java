@@ -44,7 +44,7 @@ public class WebSecurityConfig {
               auth.requestMatchers(HttpMethod.POST, "/files", "/mail", "/requests").permitAll();
               auth.anyRequest().authenticated();
             })
-        .csrf(csrf -> csrf.disable())
+        .csrf(csrf -> csrf.ignoringRequestMatchers("/files", "/mail", "/requests")) //csrf.disable()
         .formLogin(
             login ->
                 login
@@ -59,7 +59,25 @@ public class WebSecurityConfig {
               oidc.defaultSuccessUrl("/home");
             })
         .logout(logout -> logout.deleteCookies("WEBWOLFSESSION").invalidateHttpSession(true))
-        .exceptionHandling(
+            .headers(
+                    headers ->
+                            headers
+                                    .contentTypeOptions(contentTypeOptions -> {})
+                                    .contentSecurityPolicy(
+                                            csp ->
+                                                    csp.policyDirectives(
+                                                            "default-src 'self'; "
+                                                                    + "script-src 'self'; "
+                                                                    + "style-src 'self'; "
+                                                                    + "img-src 'self' data:; "
+                                                                    + "font-src 'self'; "
+                                                                    + "connect-src 'self'; "
+                                                                    + "frame-ancestors 'self'; "
+                                                                    + "object-src 'none'; "
+                                                                    + "base-uri 'self'; "
+                                                                    + "form-action 'self'"))
+                                    .frameOptions(frameOptions -> frameOptions.sameOrigin()))
+            .exceptionHandling(
             handling ->
                 handling.authenticationEntryPoint(new AjaxAuthenticationEntryPoint("/login")))
         .build();
