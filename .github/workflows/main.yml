@@ -1,0 +1,73 @@
+name: Mend Security Scan
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mend-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Checkout source
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2) Set up Java 25 (required because Maven is configured with release 25)
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # 3) Build with Maven (now using JDK 25)
+      - name: Build Project & Install Dependencies
+        run: mvn clean dependency:resolve compile
+
+      # 4) Download Mend CLI
+      - name: Download Mend CLI
+        run: |
+          curl -L -o mend https://downloads.mend.io/cli/linux_amd64/mend
+          chmod +x mend
+
+      # 5) Run Mend scans + export SCA report
+      - name: Run Mend Scans and Generate Report
+        env:
+          MEND_USER_KEY: ${{ secrets.MEND_USER_KEY }}
+          MEND_EMAIL: ${{ vars.ENVEMAIL }}
+          MEND_URL: https://saas-eu.mend.io
+        run: |
+          # Application / Project in Mend
+          MEND_SCOPE="pipeline//Github Webgoat"
+
+          echo "--- Running Mend SCA with Reachability ---"
+          ./mend dep \
+            --dir "$GITHUB_WORKSPACE" \
+            --scope "$MEND_SCOPE" \
+            --reachability \
+            --update
+
+          echo "--- Running Mend SAST ---"
+          ./mend code \
+            --dir "$GITHUB_WORKSPACE" \
+            --scope "$MEND_SCOPE"
+
+          echo "--- Running Mend Container Image scan ---"
+          ./mend image wstabac/cndemo \
+            --scope "$MEND_SCOPE"
+
+          echo "--- Waiting 30 seconds for server processing ---"
+          sleep 30
+
+          echo "--- Exporting SCA JSON report ---"
+          ./mend dep \
+            --dir "$GITHUB_WORKSPACE" \
+            --scope "$MEND_SCOPE" \
+            --export-results sca-report.json
+
+      # 6) Upload SCA report artifact
+      - name: Upload SCA Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sca-scan-report
+          path: sca-report.json
